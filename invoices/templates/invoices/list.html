@@ -1,0 +1,11 @@
+{% extends "invoices/base.html" %}
+{% block invoice_content %}
+<div class="invoices" id="invoices-list">
+    <h1>Invoices</h1>
+    {% for invoice in invoices %}
+        <p><a href="{% url 'invoices-detail' invoice.pk %}">{{ invoice.created_on.date }} &mdash; #{{ invoice.pk }}</a></p>
+    {% empty %}
+        <p>No invoices available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

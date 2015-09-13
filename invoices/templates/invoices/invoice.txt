@@ -1,0 +1,30 @@
+Invoice #{{ invoice.pk }}
+
+Date {{ invoice.created_on }}
+
+Items
+
+Quantity / Desc / Price
+-----------------------
+{% for item in items %}
+{{ item.quantity  }} / {{ item.name }} / {{ item.total }} {% if item.quantity > 1 %}({{ item.unit_price }} ea.){% endif %}
+{% endfor %}
+
+Subtotal: {{ invoice.subtotal }}
+Tax: {{ invoice.tax }}
+Total: {{ invoice.total }}
+
+Status: {{ invoice.status.upper }}
+{% if invoice.card %}
+
+Charge ID: {{ invoice.charge_id }}
+
+Card: {{ invoice.card }}
+
+Paid To:
+Aptibyte, LLC
+10013 NE Hazel Dell Ave #212
+Vancouver, WA 98685-5203
+
+Contact: support@aptibyte.com
+{% endif %}
