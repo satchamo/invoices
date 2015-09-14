@@ -13,6 +13,7 @@ class Invoice(models.Model):
     card = models.CharField(max_length=255)
     app = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
+    ip_address = models.CharField(max_length=255)
 
     class Meta:
         db_table = "invoice"
