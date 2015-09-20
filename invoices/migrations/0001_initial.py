@@ -42,8 +42,4 @@ class Migration(migrations.Migration):
                 'managed': False,
             },
         ),
-        migrations.RunSQL("""
-            CREATE VIEW invoice AS SELECT * FROM Invoice.invoice;
-            CREATE VIEW invoice_item AS SELECT * FROM Invoice.invoice_item;
-        """)
     ]
