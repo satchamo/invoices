@@ -6,4 +6,4 @@ register = template.Library()
 
 @register.filter
 def has_invoices(user):
-    return Invoice.objects.filter(fk=user.pk).count() > 0
+    return int(Invoice.objects.filter(fk=user.pk).count()) > 0
