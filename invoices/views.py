@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render
+
 from .models import Invoice, InvoiceItem
 
 app = settings.INVOICE_APP_NAME
 get_fk_from_request = getattr(settings, "INVOICE_GET_FK_FROM_REQUEST", lambda request: request.user.pk)
+
 
 @login_required
 def list_(request):

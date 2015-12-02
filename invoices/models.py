@@ -1,7 +1,10 @@
-from django.db import models
 from decimal import Decimal
-from django.template.loader import render_to_string
+
 from django.conf import settings
+from django.db import models
+from django.template.loader import render_to_string
+
+from . import patches  # noqa
 
 
 class Manager(models.Manager):

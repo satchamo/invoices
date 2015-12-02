@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 from setuptools import find_packages, setup
 
 setup(
@@ -8,4 +7,13 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     author='Matt Johnson',
+    extras_require={
+        'test': [
+            'model_mommy',
+            'mock',
+            'django<1.9',
+            'isort',
+            'flake8',
+        ],
+    }
 )
