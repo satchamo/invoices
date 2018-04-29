@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
-from .models import Invoice, InvoiceItem
+from .models import Invoice, InvoiceItem, support_email
 
 app = settings.INVOICE_APP_NAME
 get_fk_from_request = getattr(settings, "INVOICE_GET_FK_FROM_REQUEST", lambda request: request.user.pk)
@@ -28,4 +28,5 @@ def detail(request, invoice_id):
         "items": items,
         "request": request,
         "logo_url": logo_url,
+        "support_email": support_email,
     })

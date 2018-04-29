@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 
 from . import patches  # noqa
 
+support_email = getattr(settings, "INVOICE_EMAIL", "support@aptibyte.com")
 
 class Manager(models.Manager):
     def get_queryset(self):
@@ -60,7 +61,11 @@ class Invoice(models.Model):
 
     def __str__(self):
         items = InvoiceItem.objects.filter(invoice=self)
-        return render_to_string("invoices/invoice.txt", {"invoice": self, "items": items})
+        return render_to_string("invoices/invoice.txt", {
+            "invoice": self,
+            "items": items,
+            "support_email": support_email
+        })
 
 
 class InvoiceItem(models.Model):

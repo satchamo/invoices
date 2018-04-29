@@ -26,5 +26,5 @@ Aptibyte, LLC
 10013 NE Hazel Dell Ave #212
 Vancouver, WA 98685-5203
 
-Contact: support@aptibyte.com
+Contact: {{ support_email }}
 {% endif %}
