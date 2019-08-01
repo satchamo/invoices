@@ -70,7 +70,7 @@ class Invoice(models.Model):
 
 class InvoiceItem(models.Model):
     invoice_item_id = models.AutoField(primary_key=True)
-    invoice = models.ForeignKey(Invoice)
+    invoice = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255)
     quantity = models.IntegerField(default=1)
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)

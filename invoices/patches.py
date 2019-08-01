@@ -3,8 +3,15 @@ Monkey patch the password reset form so they give more helpful error messages
 """
 from django import forms as foo
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
-from django.core.urlresolvers import reverse
-from django.utils.text import mark_safe
+try:
+    from django.core.urlresolvers import reverse
+except ImportError:
+    from django.urls import reverse
+
+try:
+    from django.utils.text import mark_safe
+except ImportError:
+    from django.utils.html import mark_safe
 
 
 def _clean_email(self, fn=getattr(PasswordResetForm, "clean_email", lambda self: self.cleaned_data['email'])):
