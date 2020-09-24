@@ -78,6 +78,8 @@ tfoot th, tfoot td {
     {% endfor %}
 </table>
 
+<p><em>Currency ($) is United States Dollar</em></p>
+
 <p><strong>Status:</strong> {{ invoice.status.upper }}</p>
 {% if invoice.card %}
     <p><strong>Charge ID:</strong> {{ invoice.charge_id }}</p>
