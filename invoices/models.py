@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.template.loader import render_to_string
 
 from . import patches  # noqa
@@ -32,10 +32,30 @@ class Invoice(models.Model):
         managed = False
 
     @classmethod
+    def get_available_id(cls):
+        try:
+            with transaction.atomic(using="invoice"):
+                invoice = Invoice.create(
+                    tax=0,
+                    fk="",
+                    charge_id="",
+                    card="",
+                    status="PENDING",
+                    ip_address="",
+                    items=[],
+                )
+                invoice_id = invoice.pk
+                raise ValueError()
+        except ValueError:
+            pass
+
+        return invoice_id
+
+    @classmethod
     def create(cls, items, **kwargs):
         kwargs['app'] = settings.INVOICE_APP_NAME
         invoice = cls(**kwargs)
-        invoice.save()
+        invoice.save(force_insert=True)
 
         for item in items:
             item.invoice = invoice
