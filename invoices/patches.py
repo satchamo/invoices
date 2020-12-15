@@ -2,7 +2,9 @@
 Monkey patch the password reset form so they give more helpful error messages
 """
 from django import forms as foo
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm
+from django.utils.timezone import now
+from datetime import timedelta
 try:
     from django.core.urlresolvers import reverse
 except ImportError:
@@ -42,3 +44,28 @@ AuthenticationForm.error_messages['invalid_login'] = "That password is incorrect
 AuthenticationForm.error_messages['inactive'] = "You tried to sign up for an account, but you never paid, so your account is not active. You need to sign up again."
 
 AuthenticationForm.clean_username = _clean_username
+
+
+def _init_password_change_form(self, *args, fn=PasswordChangeForm.__init__, **kwargs, ):
+    """
+    Give people some time to change their password without entering the old
+    password. Entering the old password is kinda pointless anyway, since they
+    can just update the email address and send a password reset email. It
+    doesn't give any extra security.
+    """
+    fn(self, *args, **kwargs)
+    from django.utils.timezone import now
+
+    joined = getattr(self.user, "date_joined", None)
+    if not joined:
+        joined = getattr(self.user, "DateJoined")
+
+    last_login = getattr(self.user, "last_login", None)
+    if not last_login:
+        last_login = getattr(self.user, "LastLogin")
+
+    grace_period = timedelta(hours=36)
+    if abs(now() - joined) < grace_period:
+        self.fields.pop("old_password")
+
+PasswordChangeForm.__init__ = _init_password_change_form
