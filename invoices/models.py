@@ -79,6 +79,15 @@ class Invoice(models.Model):
     def total(self):
         return self.subtotal + self.tax
 
+    def customer_info(self):
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        user = User.objects.filter(pk=self.fk).first()
+        if user:
+            return user.first_name + " " + user.last_name + "\n" + user.email
+
+        return ""
+
     def __str__(self):
         items = InvoiceItem.objects.filter(invoice=self)
         return render_to_string("invoices/invoice.txt", {

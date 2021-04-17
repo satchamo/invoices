@@ -30,9 +30,19 @@ tfoot th, tfoot td {
     text-align:right;
 }
 
+#editable {
+    background-color:#ffff84;
+    min-height:20px;
+    white-space:pre;
+}
+
 @media print {
     .hide {
         display:none;
+    }
+
+    #editable {
+        background-color:none;
     }
 }
 </style>
@@ -40,7 +50,7 @@ tfoot th, tfoot td {
 <body>
 
 {% block logo %}{% endblock %}
-<a href="javascript:window.print()" class="hide" style="float:right"><strong>Print</strong></a>
+<a href="javascript:window.print()" class="hide" style="float:right; font-size:36px"><strong>Print</strong></a>
 {% if logo_url %}
     <img src="{{ logo_url }}"> 
 {% endif %}
@@ -83,6 +93,8 @@ tfoot th, tfoot td {
 <p><strong>Status:</strong> {{ invoice.status.upper }}</p>
 {% if invoice.card %}
     <p><strong>Charge ID:</strong> {{ invoice.charge_id }}</p>
+    <p style="margin-bottom:0"><strong>Customer Information</strong> <span class="hide"><em>(you can edit this field to add any specific information you need)</em></span></p>
+    <div contenteditable id="editable">{{ invoice.customer_info }}</div>
     <p><strong>Card:</strong> {{ invoice.card }}</p>
     <p><strong>Paid To:</strong> <br />Aptibyte, LLC<br />
     10013 NE Hazel Dell Ave #212<br />
