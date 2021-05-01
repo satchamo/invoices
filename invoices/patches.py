@@ -5,6 +5,7 @@ from django import forms as foo
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm
 from django.utils.timezone import now
 from datetime import timedelta
+from django.utils.html import mark_safe
 try:
     from django.core.urlresolvers import reverse
 except ImportError:
@@ -55,6 +56,10 @@ def _init_password_change_form(self, *args, fn=PasswordChangeForm.__init__, **kw
     """
     fn(self, *args, **kwargs)
     from django.utils.timezone import now
+
+    reset_url = reverse("password_reset")
+    self.fields['old_password'].label = mark_safe(f"""Old password:<br /><span style="font-weight:normal">(If don't have it, you can <a href="{reset_url}">reset your password</a> instead)</span>""")
+    self.fields['old_password'].label_suffix = ""
 
     joined = getattr(self.user, "date_joined", None)
     if not joined:
