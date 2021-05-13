@@ -23,6 +23,9 @@ class Invoice(models.Model):
     app = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     ip_address = models.CharField(max_length=255)
+    customer = models.CharField(max_length=255, default="")
+    reference_number = models.CharField(max_length=255, default="")
+    email = models.CharField(max_length=255, default="")
 
     objects = Manager()
 
@@ -53,7 +56,7 @@ class Invoice(models.Model):
 
     @classmethod
     def create(cls, items, **kwargs):
-        kwargs['app'] = settings.INVOICE_APP_NAME
+        kwargs['app'] = kwargs.get("app", settings.INVOICE_APP_NAME)
         invoice = cls(**kwargs)
         invoice.save(force_insert=True)
 
@@ -88,6 +91,27 @@ class Invoice(models.Model):
 
         return ""
 
+    def split_customer(self):
+        customer = [line.strip() for line in self.customer.split("\n")]
+        lines = []
+        rest = []
+        l = lines
+        for line in customer:
+            if line == "":
+                l = rest
+            else:
+                l.append(line)
+
+        return lines, rest
+
+    def pretty_status(self):
+        status = "Unpaid"
+        if self.status == "PAID":
+            status = "PAID"
+        elif self.card[:5].lower() == "check":
+            status = f"Mailed ({self.card.replace('-', ' #')})"
+        return status
+
     def __str__(self):
         items = InvoiceItem.objects.filter(invoice=self)
         return render_to_string("invoices/invoice.txt", {
@@ -104,6 +128,8 @@ class InvoiceItem(models.Model):
     quantity = models.IntegerField(default=1)
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     taxable = models.BooleanField(default=True)
+    # price_id from Stripe API
+    price_id = models.CharField(max_length=255, default="")
 
     objects = Manager()
 
