@@ -1,6 +1,7 @@
 """
 Monkey patch the password reset form so they give more helpful error messages
 """
+import urllib.parse
 from django import forms as foo
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm
 from django.utils.timezone import now
@@ -30,6 +31,11 @@ def _clean_email(self, fn=getattr(PasswordResetForm, "clean_email", lambda self:
     return fn(self)
 
 PasswordResetForm.clean_email = _clean_email
+
+def _get_success_url(self):
+    return reverse("password_reset_done") + "?email=" + urllib.parse.quote_plus(self.form.cleaned_data['email'])
+
+PasswordResetForm.get_success_url = _get_success_url
 
 
 def _clean_username(self, fn=getattr(AuthenticationForm, "clean_username", lambda self: self.cleaned_data['username'])):
